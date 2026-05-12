@@ -1,0 +1,48 @@
+const express = require("express");
+const Anthropic = require("@anthropic-ai/sdk");
+const path = require("path");
+require("dotenv").config();
+
+const client = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY
+});
+
+const app = express();
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname)));
+
+const conversationHistory = [];
+
+app.post("/chat", async (req, res) => {
+  const userMessage = req.body.message;
+
+  conversationHistory.push({
+    role: "user",
+    content: userMessage
+  });
+
+  const message = await client.messages.create({
+    model: "claude-sonnet-4-5",
+    max_tokens: 1024,
+    system: `तपाईं एक नेपाली कानुनी सहायक हुनुहुन्छ। तपाईंको काम साधारण नेपाली मानिसहरूलाई 
+    कानुनी जानकारी सरल भाषामा दिनु हो। तपाईं नेपाली र अंग्रेजी दुवै भाषामा उत्तर दिन सक्नुहुन्छ। 
+    तपाईं कानुनी सल्लाहकार होइन — तपाईं कानुनी जानकारी दिनुहुन्छ। 
+    जटिल मुद्दाहरूमा वकिलसँग परामर्श गर्न सल्लाह दिनुहोस्।
+    खाना, मनोरञ्जन, वा कानुनसँग असम्बन्धित विषयहरूमा उत्तर नदिनुहोस्।`,
+    messages: conversationHistory
+  });
+
+  const response = message.content[0].text;
+
+  conversationHistory.push({
+    role: "assistant",
+    content: response
+  });
+
+  res.json({ response });
+});
+
+app.listen(3000, () => {
+  console.log("Server running at http://localhost:3000");
+});
