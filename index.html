@@ -123,10 +123,16 @@
 </div>
 
     <div class="messages" id="messages">
-      <div class="message assistant">
-        नमस्ते! म तपाईंको कानुनी सहायक हुँ। तपाईंको कानुनी प्रश्नहरू सोध्नुहोस् — नेपाली वा अंग्रेजीमा। 🙏
-      </div>
-    </div>
+  <div class="message assistant">
+    नमस्ते! म Vivekai हुँ — तपाईंको कानुनी साथी। कानुनी प्रश्नहरू सोध्नुहोस् — नेपाली वा अंग्रेजीमा। 🙏
+  </div>
+  <div id="suggestions" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 0 4px;">
+    <button onclick="askSuggestion('मेरो मालिकले तलब दिएनन् के गर्ने?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">मेरो मालिकले तलब दिएनन् के गर्ने?</button>
+    <button onclick="askSuggestion('जग्गा दर्ता कसरी गर्ने?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">जग्गा दर्ता कसरी गर्ने?</button>
+    <button onclick="askSuggestion('What are my rights if arrested?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">What are my rights if arrested?</button>
+    <button onclick="askSuggestion('घरेलु हिंसा भयो भने कहाँ जाने?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">घरेलु हिंसा भयो भने कहाँ जाने?</button>
+  </div>
+</div>
 
     <div class="input-area">
       <input 
@@ -140,6 +146,11 @@
   </div>
 
   <script>
+    function askSuggestion(text) {
+  document.getElementById("suggestions").style.display = "none";
+  document.getElementById("userInput").value = text;
+  sendMessage();
+}
     async function sendMessage() {
       const input = document.getElementById("userInput");
       const messages = document.getElementById("messages");
@@ -166,9 +177,11 @@
       // Remove typing indicator and show response
       document.getElementById("typing").remove();
       const formatted = data.response
-  .replace(/#{1,3} (.+)/g, '<br><br><strong>$1</strong><br>')
+  .replace(/#{1,3} (.+)/g, '<strong>$1</strong>')
   .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-  .replace(/- (.+)/g, '<br>• $1')
+  .replace(/\*(.+?)\*/g, '<em>$1</em>')
+  .replace(/- (.+)/g, '• $1')
+  .replace(/\n\n/g, '<br><br>')
   .replace(/\n/g, '<br>');
 messages.innerHTML += `<div class="message assistant">${formatted}</div>`;
       messages.scrollTop = messages.scrollHeight;
