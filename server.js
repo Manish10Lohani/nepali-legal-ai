@@ -35,7 +35,7 @@ app.post("/chat", async (req, res) => {
       messages: conversationHistory
     });
 
-    const response = message.content[0].text;
+    const response = message.content[0].text + "\n\n---\n*यो सामान्य कानुनी जानकारी मात्र हो। आफ्नो विशेष अवस्थाको लागि योग्य वकिलसँग परामर्श गर्नुहोस्।*";
 
     conversationHistory.push({
       role: "assistant",
