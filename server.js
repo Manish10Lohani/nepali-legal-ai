@@ -9,7 +9,7 @@ const client = new Anthropic({
 });
 
 const app = express();
-
+app.set('trust proxy', 1);
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
@@ -41,7 +41,7 @@ app.post("/chat", async (req, res) => {
     }
 
     const message = await client.messages.create({
-      model: "claude-sonnet-4-5",
+      model: "claude-haiku-4-5",
       max_tokens: 800,
       system: `तपाईं **Vivekai** हुनुहुन्छ — नेपाली जनताको लागि AI कानुनी सहायक।
 
