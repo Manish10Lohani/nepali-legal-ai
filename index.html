@@ -128,6 +128,15 @@
 
     button:hover { background: #002570; }
   </style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5JL0DP4RX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Q5JL0DP4RX');
+</script>
+
 </head>
 <body>
   <div class="container">
@@ -193,11 +202,17 @@
       messages.innerHTML += `<div class="message typing" id="typing">सहायक लेख्दैछ... <div class="typing-dots"><span></span><span></span><span></span></div></div>`;
       messages.scrollTop = messages.scrollHeight;
 
-      const res = await fetch("/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text })
-      });
+      const sessionId = sessionStorage.getItem('vivekaiSession') || Math.random().toString(36).substr(2, 9);
+sessionStorage.setItem('vivekaiSession', sessionId);
+
+const res = await fetch("/chat", {
+  method: "POST",
+  headers: { 
+    "Content-Type": "application/json",
+    "x-session-id": sessionId
+  },
+  body: JSON.stringify({ message: text })
+});
 
       const data = await res.json();
 
