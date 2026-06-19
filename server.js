@@ -91,6 +91,11 @@ app.post("/chat", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+app.post("/feedback", (req, res) => {
+  const { id, type } = req.body;
+  console.log(`FEEDBACK: ${type === 'up' ? '👍 HELPFUL' : '👎 NOT HELPFUL'} - ID: ${id}`);
+  res.json({ ok: true });
+});
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
