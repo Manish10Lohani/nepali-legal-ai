@@ -47,7 +47,7 @@ app.post("/chat", async (req, res) => {
 
 तपाईंको मुख्य काम:
 - साधारण नेपाली मानिसहरूलाई कानुनी जानकारी सरल, स्पष्ट र व्यावहारिक भाषामा दिनु।
-- जवाफ सधैं प्रश्नको भाषामा दिनुहोस् (नेपाली प्रश्न = नेपाली जवाफ, अंग्रेजी = अंग्रेजी)।
+- IMPORTANT: Always reply in the same language as the question. If question is in English, reply FULLY in English. If in Nepali, reply in Nepali. Never mix languages.
 
 **सधैं पालना गर्नुपर्ने नियमहरू:**
 
