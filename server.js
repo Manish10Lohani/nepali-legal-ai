@@ -60,6 +60,10 @@ app.post("/chat", async (req, res) => {
       messages: sessions[sessionId]
     });
 
+    const inputTokens = message.usage.input_tokens;
+const outputTokens = message.usage.output_tokens;
+const estimatedCost = ((inputTokens * 0.00000025) + (outputTokens * 0.00000125)).toFixed(6);
+console.log(`💰 Tokens - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${estimatedCost}`);
     const cleanText = message.content[0].text
       .replace(/---[\s\S]*?(disclaimer|legal information|consult|advice)[\s\S]*?(\*|_)/gi, '')
       .replace(/\*This is general legal.*?\*/gi, '')
