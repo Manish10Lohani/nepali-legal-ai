@@ -10,6 +10,7 @@ const client = new Anthropic({
 
 const app = express();
 app.set('trust proxy', 1);
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
@@ -47,8 +48,9 @@ app.post("/chat", async (req, res) => {
 
 तपाईंको मुख्य काम:
 - साधारण नेपाली मानिसहरूलाई कानुनी जानकारी सरल, स्पष्ट र व्यावहारिक भाषामा दिनु।
-- CRITICAL: You must respond in NEPALI language (not Hindi) when user writes in Nepali script. If question is in English, respond in English. Never respond in Hindi.
-- तपाईं सधैं नेपाली भाषामा जवाफ दिनुहोस् — हिन्दी होइन। नेपाली र हिन्दी फरक भाषा हुन्।
+- CRITICAL: Respond in NEPALI (not Hindi) for Nepali script questions. Respond in English for English questions. Never use Hindi.
+- तपाईं सधैं नेपाली भाषामा जवाफ दिनुहोस् — हिन्दी होइन।
+
 **सधैं पालना गर्नुपर्ने नियमहरू:**
 
 1. **तपाईं कानुनी सल्लाहकार होइन** — सामान्य कानुनी जानकारी मात्र दिनुहोस्।
@@ -56,14 +58,16 @@ app.post("/chat", async (req, res) => {
 3. **संवेदनशील विषयमा** — घरेलु हिंसा/यौन उत्पीडनमा हेल्पलाइन दिनुहोस् (१४४, १००)।
 4. **टोन**: दयालु, शान्त र विश्वासिलो।
 5. कानुन बाहेकका विषयमा जवाफ नदिनुहोस्।
-7. जब सम्भव होस्, जवाफको अन्तमा सम्बन्धित कानुनको नाम उल्लेख गर्नुहोस्। जस्तै: "स्रोत: श्रम ऐन २०७४" वा "Source: Nepal Labour Act 2074",
+6. जवाफको अन्तमा disclaimer नथप्नुहोस् — त्यो automatically थपिन्छ।
+7. ALWAYS end your answer with the relevant law. Format: "📖 स्रोत: [law name]" for Nepali or "📖 Source: [law name]" for English. This is mandatory for every response.`,
       messages: sessions[sessionId]
     });
 
     const inputTokens = message.usage.input_tokens;
-const outputTokens = message.usage.output_tokens;
-const estimatedCost = ((inputTokens * 0.00000025) + (outputTokens * 0.00000125)).toFixed(6);
-console.log(`💰 Tokens - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${estimatedCost}`);
+    const outputTokens = message.usage.output_tokens;
+    const estimatedCost = ((inputTokens * 0.00000025) + (outputTokens * 0.00000125)).toFixed(6);
+    console.log(`💰 Tokens - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${estimatedCost}`);
+
     const cleanText = message.content[0].text
       .replace(/---[\s\S]*?(disclaimer|legal information|consult|advice)[\s\S]*?(\*|_)/gi, '')
       .replace(/\*This is general legal.*?\*/gi, '')
@@ -94,12 +98,13 @@ console.log(`💰 Tokens - Input: ${inputTokens}, Output: ${outputTokens}, Cost:
   }
 });
 
-const PORT = process.env.PORT || 3000;
 app.post("/feedback", (req, res) => {
   const { id, type } = req.body;
   console.log(`FEEDBACK: ${type === 'up' ? '👍 HELPFUL' : '👎 NOT HELPFUL'} - ID: ${id}`);
   res.json({ ok: true });
 });
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
