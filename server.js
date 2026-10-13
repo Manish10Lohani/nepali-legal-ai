@@ -98,13 +98,17 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-app.post("/feedback", (req, res) => {
-  const { id, type } = req.body;
-  console.log(`FEEDBACK: ${type === 'up' ? '👍 HELPFUL' : '👎 NOT HELPFUL'} - ID: ${id}`);
-  res.json({ ok: true });
-});
+const https = require("https");
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  
+  setInterval(() => {
+    https.get("https://vivekai.live", (res) => {
+      console.log(`Keep-alive ping: ${res.statusCode}`);
+    }).on("error", (e) => {
+      console.log(`Keep-alive error: ${e.message}`);
+    });
+  }, 14 * 60 * 1000);
 });
