@@ -2,6 +2,7 @@ const express = require("express");
 const Anthropic = require("@anthropic-ai/sdk");
 const path = require("path");
 const rateLimit = require("express-rate-limit");
+const https = require("https");
 require("dotenv").config();
 
 const client = new Anthropic({
@@ -23,7 +24,6 @@ app.use(express.static(path.join(__dirname)));
 
 const sessions = {};
 
-// Clean up sessions older than 1 hour
 setInterval(() => {
   const oneHourAgo = Date.now() - (60 * 60 * 1000);
   Object.keys(sessions).forEach(sessionId => {
@@ -39,23 +39,26 @@ app.post("/chat", async (req, res) => {
     const sessionId = req.headers['x-session-id'] || 'default';
 
     if (!sessions[sessionId]) {
-  sessions[sessionId] = { history: [], lastActive: Date.now() };
-}
+      sessions[sessionId] = { history: [], lastActive: Date.now() };
+    }
 
-sessions[sessionId].lastActive = Date.now();
-sessions[sessionId].history.push({
-  role: "user",
-  content: userMessage
-});
+    sessions[sessionId].lastActive = Date.now();
+    sessions[sessionId].history.push({
+      role: "user",
+      content: userMessage
+    });
 
     if (sessions[sessionId].history.length > 6) {
-  sessions[sessionId].history = sessions[sessionId].history.slice(-6);
-}
+      sessions[sessionId].history = sessions[sessionId].history.slice(-6);
+    }
 
     const message = await client.messages.create({
       model: "claude-haiku-4-5",
       max_tokens: 800,
-      system: `तपाईं **Vivekai** हुनुहुन्छ — नेपाली जनताको लागि AI कानुनी सहायक।
+      system: [
+        {
+          type: "text",
+          text: `तपाईं **Vivekai** हुनुहुन्छ — नेपाली जनताको लागि AI कानुनी सहायक।
 
 तपाईंको मुख्य काम:
 - साधारण नेपाली मानिसहरूलाई कानुनी जानकारी सरल, स्पष्ट र व्यावहारिक भाषामा दिनु।
@@ -71,6 +74,9 @@ sessions[sessionId].history.push({
 5. कानुन बाहेकका विषयमा जवाफ नदिनुहोस्।
 6. जवाफको अन्तमा disclaimer नथप्नुहोस् — त्यो automatically थपिन्छ।
 7. ALWAYS end your answer with the relevant law. Format: "📖 स्रोत: [law name]" for Nepali or "📖 Source: [law name]" for English. This is mandatory for every response.`,
+          cache_control: {"type": "ephemeral"}
+        }
+      ],
       messages: sessions[sessionId].history
     });
 
@@ -95,9 +101,9 @@ sessions[sessionId].history.push({
     const response = cleanText + "\n\n---\n" + disclaimer;
 
     sessions[sessionId].history.push({
-  role: "assistant",
-  content: response
-});
+      role: "assistant",
+      content: response
+    });
 
     res.json({ response });
 
@@ -109,12 +115,16 @@ sessions[sessionId].history.push({
   }
 });
 
-const https = require("https");
+app.post("/feedback", (req, res) => {
+  const { id, type } = req.body;
+  console.log(`FEEDBACK: ${type === 'up' ? '👍 HELPFUL' : '👎 NOT HELPFUL'} - ID: ${id}`);
+  res.json({ ok: true });
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  
+
   setInterval(() => {
     https.get("https://vivekai.live", (res) => {
       console.log(`Keep-alive ping: ${res.statusCode}`);
