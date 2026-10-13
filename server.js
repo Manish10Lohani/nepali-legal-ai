@@ -23,23 +23,34 @@ app.use(express.static(path.join(__dirname)));
 
 const sessions = {};
 
+// Clean up sessions older than 1 hour
+setInterval(() => {
+  const oneHourAgo = Date.now() - (60 * 60 * 1000);
+  Object.keys(sessions).forEach(sessionId => {
+    if (sessions[sessionId].lastActive < oneHourAgo) {
+      delete sessions[sessionId];
+    }
+  });
+}, 30 * 60 * 1000);
+
 app.post("/chat", async (req, res) => {
   try {
     const userMessage = req.body.message;
     const sessionId = req.headers['x-session-id'] || 'default';
 
     if (!sessions[sessionId]) {
-      sessions[sessionId] = [];
-    }
+  sessions[sessionId] = { history: [], lastActive: Date.now() };
+}
 
-    sessions[sessionId].push({
-      role: "user",
-      content: userMessage
-    });
+sessions[sessionId].lastActive = Date.now();
+sessions[sessionId].history.push({
+  role: "user",
+  content: userMessage
+});
 
-    if (sessions[sessionId].length > 6) {
-      sessions[sessionId] = sessions[sessionId].slice(-6);
-    }
+    if (sessions[sessionId].history.length > 6) {
+  sessions[sessionId].history = sessions[sessionId].history.slice(-6);
+}
 
     const message = await client.messages.create({
       model: "claude-haiku-4-5",
@@ -60,7 +71,7 @@ app.post("/chat", async (req, res) => {
 5. कानुन बाहेकका विषयमा जवाफ नदिनुहोस्।
 6. जवाफको अन्तमा disclaimer नथप्नुहोस् — त्यो automatically थपिन्छ।
 7. ALWAYS end your answer with the relevant law. Format: "📖 स्रोत: [law name]" for Nepali or "📖 Source: [law name]" for English. This is mandatory for every response.`,
-      messages: sessions[sessionId]
+      messages: sessions[sessionId].history
     });
 
     const inputTokens = message.usage.input_tokens;
@@ -83,10 +94,10 @@ app.post("/chat", async (req, res) => {
 
     const response = cleanText + "\n\n---\n" + disclaimer;
 
-    sessions[sessionId].push({
-      role: "assistant",
-      content: response
-    });
+    sessions[sessionId].history.push({
+  role: "assistant",
+  content: response
+});
 
     res.json({ response });
 
