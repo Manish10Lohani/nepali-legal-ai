@@ -4,20 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>⚖️ Vivekai</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    
-  body {
-  font-family: Arial, sans-serif;
-  background: #f0f2f5;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 20;
-}
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
     .container {
       width: 100%;
       max-width: 780px;
@@ -33,12 +34,38 @@
     .header {
       background: #003893;
       color: white;
-      padding: 20px;
-      text-align: center;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .header h1 { font-size: 20px; }
-    .header p { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+    .header-title { text-align: center; flex: 1; }
+    .header-title h1 { font-size: 20px; }
+    .header-title p { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+
+    .lang-toggle {
+      display: flex;
+      gap: 6px;
+    }
+    .lang-btn {
+      padding: 5px 12px;
+      border-radius: 16px;
+      border: 1.5px solid rgba(255,255,255,0.7);
+      background: transparent;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: white;
+      color: #003893;
+      border-color: white;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.2); }
+    .lang-btn.active:hover { background: white; }
 
     .messages {
       flex: 1;
@@ -73,30 +100,30 @@
     }
 
     .typing {
-  background: #f0f2f5;
-  color: #999;
-  align-self: flex-start;
-  border-bottom-left-radius: 4px;
-  font-style: italic;
-}
+      background: #f0f2f5;
+      color: #999;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      font-style: italic;
+    }
 
-.typing-dots span {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: #003893;
-  border-radius: 50%;
-  margin: 0 2px;
-  animation: bounce 1.2s infinite;
-}
+    .typing-dots span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #003893;
+      border-radius: 50%;
+      margin: 0 2px;
+      animation: bounce 1.2s infinite;
+    }
 
-.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
 
-@keyframes bounce {
-  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-  40% { transform: scale(1); opacity: 1; }
-}
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
 
     .input-area {
       padding: 16px;
@@ -128,49 +155,69 @@
 
     button:hover { background: #002570; }
   </style>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5JL0DP4RX"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-Q5JL0DP4RX');
-</script>
 
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q5JL0DP4RX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-Q5JL0DP4RX');
+  </script>
 </head>
 <body>
   <div class="container">
+
+    <!-- HEADER with language toggle -->
     <div class="header">
-      <h1>⚖️ Vivekai</h1>
-      <p>Wisdom in Law — कानुनी प्रक्रिया सजिलो तरिकाले</p>
+      <div style="width:80px;"></div><!-- spacer to center title -->
+      <div class="header-title">
+        <h1>⚖️ Vivekai</h1>
+        <p>Wisdom in Law — कानुनी प्रक्रिया सजिलो तरिकाले</p>
+      </div>
+      <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLang('np')" id="btn-np">नेपाली</button>
+        <button class="lang-btn" onclick="setLang('en')" id="btn-en">English</button>
+      </div>
     </div>
 
+    <!-- DISCLAIMER BANNER -->
     <div style="background: #fff3cd; color: #856404; padding: 10px 20px; font-size: 12px; text-align: center;">
-      ⚠️ यो सामान्य कानुनी जानकारी मात्र हो — पेशेवर कानुनी सल्लाह होइन। जटिल मुद्दाहरूमा योग्य वकिलसँग परामर्श गर्नुहोस्।
+      <span id="disclaimer-np">⚠️ यो सामान्य कानुनी जानकारी मात्र हो — पेशेवर कानुनी सल्लाह होइन। जटिल मुद्दाहरूमा योग्य वकिलसँग परामर्श गर्नुहोस्।</span>
+      <span id="disclaimer-en" style="display:none;">⚠️ This is general legal information only — not professional legal advice. For complex matters, consult a qualified lawyer.</span>
     </div>
 
     <div class="messages" id="messages">
-      <div class="message assistant">
+      <!-- Welcome message -->
+      <div class="message assistant" id="welcome-msg">
         नमस्ते! म Vivekai हुँ — तपाईंको कानुनी साथी। कानुनी प्रश्नहरू सोध्नुहोस् — नेपाली वा अंग्रेजीमा। 🙏
       </div>
+
+      <!-- Suggestion buttons -->
       <div id="suggestions" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 0 4px;">
-        <button onclick="askSuggestion('मेरो मालिकले तलब दिएनन् के गर्ने?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">मेरो मालिकले तलब दिएनन् के गर्ने?</button>
-        <button onclick="askSuggestion('जग्गा दर्ता कसरी गर्ने?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">जग्गा दर्ता कसरी गर्ने?</button>
-        <button onclick="askSuggestion('What are my rights if arrested?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">What are my rights if arrested?</button>
-        <button onclick="askSuggestion('घरेलु हिंसा भयो भने कहाँ जाने?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">घरेलु हिंसा भयो भने कहाँ जाने?</button>
-        <button onclick="askSuggestion('विदेश जानु अघि के जान्नुपर्छ?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">विदेश जानु अघि के जान्नुपर्छ?</button>
+        <!-- Nepali suggestions -->
+        <button id="sug-np-1" onclick="askSuggestion('मेरो मालिकले तलब दिएनन् के गर्ने?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">मेरो मालिकले तलब दिएनन् के गर्ने?</button>
+        <button id="sug-np-2" onclick="askSuggestion('जग्गा दर्ता कसरी गर्ने?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">जग्गा दर्ता कसरी गर्ने?</button>
+        <button id="sug-np-3" onclick="askSuggestion('घरेलु हिंसा भयो भने कहाँ जाने?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">घरेलु हिंसा भयो भने कहाँ जाने?</button>
+        <button id="sug-np-4" onclick="askSuggestion('विदेश जानु अघि के जान्नुपर्छ?')" style="background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">विदेश जानु अघि के जान्नुपर्छ?</button>
+        <!-- English suggestions (hidden by default) -->
+        <button id="sug-en-1" onclick="askSuggestion('What are my rights if arrested?')" style="display:none; background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">What are my rights if arrested?</button>
+        <button id="sug-en-2" onclick="askSuggestion('My employer has not paid my salary. What can I do?')" style="display:none; background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">Employer hasn't paid my salary</button>
+        <button id="sug-en-3" onclick="askSuggestion('How do I register land in Nepal?')" style="display:none; background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">How to register land in Nepal?</button>
+        <button id="sug-en-4" onclick="askSuggestion('What do I need to know before going for foreign employment?')" style="display:none; background: white; color: #003893; border: 1px solid #003893; padding: 8px 12px; border-radius: 16px; cursor: pointer; font-size: 13px;">Foreign employment rights</button>
       </div>
-      <p style="font-size: 12px; color: #888; text-align: center; padding: 8px 16px;">म प्रक्रिया बताउँछु, निर्णय होइन। I explain the process, not the verdict.</p>
+
+      <p id="tagline" style="font-size: 12px; color: #888; text-align: center; padding: 8px 16px;">म प्रक्रिया बताउँछु, निर्णय होइन। I explain the process, not the verdict.</p>
     </div>
 
     <div class="input-area">
-      <input 
-        type="text" 
-        id="userInput" 
+      <input
+        type="text"
+        id="userInput"
         placeholder="आफ्नो प्रश्न यहाँ लेख्नुहोस्..."
         onkeypress="if(event.key==='Enter') sendMessage()"
       />
-      <button onclick="sendMessage()">पठाउनुहोस्</button>
+      <button onclick="sendMessage()" id="send-btn">पठाउनुहोस्</button>
     </div>
   </div>
 
@@ -182,114 +229,172 @@
     &nbsp;|&nbsp;
     <a href="mailto:lohanim77@gmail.com" style="color: #003893; text-decoration: none;">Contact Us</a>
     &nbsp;|&nbsp;
-    <a href="/about.html" style="color: #003893; text-decoration: none;">How It Works</a>
+    <a href="/about.html" style="color: #003893; text-decoration: none;" id="footer-about">How It Works</a>
     &nbsp;|&nbsp;
-    <a href="/faq.html" style="color: #003893; text-decoration: none;">FAQ</a>
+    <a href="/faq.html" style="color: #003893; text-decoration: none;" id="footer-faq">FAQ</a>
   </div>
 
   <script>
-function askSuggestion(text) {
-  document.getElementById("suggestions").style.display = "none";
-  document.getElementById("userInput").value = text;
-  sendMessage();
-}
+    // ── Language toggle ──────────────────────────────────────────────
+    let currentLang = 'np';
 
-async function sendFeedback(id, type, btn) {
-  const container = btn.parentElement;
-  while (container.firstChild) container.removeChild(container.firstChild);
-  const msg = document.createElement('span');
-  msg.style.cssText = 'font-size:13px;color:#666;padding:4px 10px;';
-  msg.textContent = type === 'up' ? '✅ धन्यवाद!' : '🙏 धन्यवाद! सुधार गर्नेछौं।';
-  container.appendChild(msg);
-  await fetch("/feedback", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id, type })
-  });
-}
+    function setLang(lang) {
+      currentLang = lang;
+      const isEn = lang === 'en';
 
-async function sendMessage() {
-  const input = document.getElementById("userInput");
-  const messages = document.getElementById("messages");
-  const text = input.value.trim();
-  if (!text) return;
+      // Header buttons
+      document.getElementById('btn-np').classList.toggle('active', !isEn);
+      document.getElementById('btn-en').classList.toggle('active', isEn);
 
-  const userDiv = document.createElement('div');
-  userDiv.className = 'message user';
-  userDiv.textContent = text;
-  messages.appendChild(userDiv);
-  input.value = "";
+      // Disclaimer
+      document.getElementById('disclaimer-np').style.display = isEn ? 'none' : 'inline';
+      document.getElementById('disclaimer-en').style.display = isEn ? 'inline' : 'none';
 
-  const typingDiv = document.createElement('div');
-  typingDiv.className = 'message typing';
-  typingDiv.id = 'typing';
-  typingDiv.innerHTML = 'सहायक लेख्दैछ... <div class="typing-dots"><span></span><span></span><span></span></div>';
-  messages.appendChild(typingDiv);
-  messages.scrollTop = messages.scrollHeight;
+      // Welcome message (only if chat hasn't started)
+      const welcome = document.getElementById('welcome-msg');
+      if (welcome) {
+        welcome.textContent = isEn
+          ? 'Hello! I am Vivekai — your legal companion. Ask legal questions in Nepali or English. 🙏'
+          : 'नमस्ते! म Vivekai हुँ — तपाईंको कानुनी साथी। कानुनी प्रश्नहरू सोध्नुहोस् — नेपाली वा अंग्रेजीमा। 🙏';
+      }
 
-  const sessionId = sessionStorage.getItem('vivekaiSession') || Math.random().toString(36).substr(2, 9);
-  sessionStorage.setItem('vivekaiSession', sessionId);
+      // Suggestions
+      ['sug-np-1','sug-np-2','sug-np-3','sug-np-4'].forEach(id => {
+        document.getElementById(id).style.display = isEn ? 'none' : 'inline-block';
+      });
+      ['sug-en-1','sug-en-2','sug-en-3','sug-en-4'].forEach(id => {
+        document.getElementById(id).style.display = isEn ? 'inline-block' : 'none';
+      });
 
-  const res = await fetch("/chat", {
-    method: "POST",
-    headers: { 
-      "Content-Type": "application/json",
-      "x-session-id": sessionId
-    },
-    body: JSON.stringify({ message: text })
-  });
+      // Input placeholder & send button
+      document.getElementById('userInput').placeholder = isEn
+        ? 'Type your question here...'
+        : 'आफ्नो प्रश्न यहाँ लेख्नुहोस्...';
+      document.getElementById('send-btn').textContent = isEn ? 'Send' : 'पठाउनुहोस्';
 
-  const data = await res.json();
+      // Typing indicator text (for next message)
+      window._typingText = isEn
+        ? 'Assistant is typing... '
+        : 'सहायक लेख्दैछ... ';
 
-  document.getElementById("typing").remove();
-  const formatted = data.response
-    .replace(/#{1,3} (.+)/g, '<strong>$1</strong>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/- (.+)/g, '• $1')
-    .replace(/\n\n/g, '<br><br>')
-    .replace(/\n/g, '<br>');
+      // Save preference
+      try { localStorage.setItem('vivekaiLang', lang); } catch(e) {}
+    }
 
-  const feedbackId = Date.now();
-  const shareText = encodeURIComponent("Vivekaiले मलाई यो कानुनी जानकारी दियो:\n\n" + data.response.substring(0, 300) + "...\n\nथप जान्नुहोस्: https://vivekai.live");
+    // Load saved language preference
+    try {
+      const saved = localStorage.getItem('vivekaiLang');
+      if (saved === 'en') setLang('en');
+    } catch(e) {}
 
-  const assistantDiv = document.createElement('div');
-  assistantDiv.className = 'message assistant';
-  assistantDiv.innerHTML = formatted; // safe: AI response from our own backend, not user input
-  messages.appendChild(assistantDiv);
+    // ── Chat functions ───────────────────────────────────────────────
+    function askSuggestion(text) {
+      document.getElementById("suggestions").style.display = "none";
+      document.getElementById("userInput").value = text;
+      sendMessage();
+    }
 
-  const actionsDiv = document.createElement('div');
-  actionsDiv.style.cssText = 'display:flex;gap:8px;padding:0 4px;margin-top:-8px;flex-wrap:wrap;';
+    async function sendFeedback(id, type, btn) {
+      const container = btn.parentElement;
+      while (container.firstChild) container.removeChild(container.firstChild);
+      const msg = document.createElement('span');
+      msg.style.cssText = 'font-size:13px;color:#666;padding:4px 10px;';
+      msg.textContent = type === 'up'
+        ? (currentLang === 'en' ? '✅ Thank you!' : '✅ धन्यवाद!')
+        : (currentLang === 'en' ? '🙏 Thank you! We will improve.' : '🙏 धन्यवाद! सुधार गर्नेछौं।');
+      container.appendChild(msg);
+      await fetch("/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, type })
+      });
+    }
 
-  const upBtn = document.createElement('button');
-  upBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
-  upBtn.textContent = '👍';
-  upBtn.onclick = function() { sendFeedback(feedbackId, 'up', this); };
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const messages = document.getElementById("messages");
+      const text = input.value.trim();
+      if (!text) return;
 
-  const downBtn = document.createElement('button');
-  downBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
-  downBtn.textContent = '👎';
-  downBtn.onclick = function() { sendFeedback(feedbackId, 'down', this); };
+      const userDiv = document.createElement('div');
+      userDiv.className = 'message user';
+      userDiv.textContent = text;
+      messages.appendChild(userDiv);
+      input.value = "";
 
-  const waLink = document.createElement('a');
-  waLink.href = 'https://wa.me/?text=' + shareText;
-  waLink.target = '_blank';
-  waLink.style.cssText = 'background:#25D366;color:white;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;text-decoration:none;';
-  waLink.textContent = '📱 WhatsApp';
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'message typing';
+      typingDiv.id = 'typing';
+      const typingText = window._typingText || 'सहायक लेख्दैछ... ';
+      typingDiv.innerHTML = typingText + '<div class="typing-dots"><span></span><span></span><span></span></div>';
+      messages.appendChild(typingDiv);
+      messages.scrollTop = messages.scrollHeight;
 
-  const fbLink = document.createElement('a');
-  fbLink.href = 'https://www.facebook.com/sharer/sharer.php?u=https://vivekai.live';
-  fbLink.target = '_blank';
-  fbLink.style.cssText = 'background:#1877F2;color:white;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;text-decoration:none;';
-  fbLink.textContent = '📘 Facebook';
+      const sessionId = sessionStorage.getItem('vivekaiSession') || Math.random().toString(36).substr(2, 9);
+      sessionStorage.setItem('vivekaiSession', sessionId);
 
-  actionsDiv.appendChild(upBtn);
-  actionsDiv.appendChild(downBtn);
-  actionsDiv.appendChild(waLink);
-  actionsDiv.appendChild(fbLink);
-  messages.appendChild(actionsDiv);
-  messages.scrollTop = messages.scrollHeight;
-}
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-session-id": sessionId
+        },
+        body: JSON.stringify({ message: text })
+      });
+
+      const data = await res.json();
+
+      document.getElementById("typing").remove();
+      const formatted = data.response
+        .replace(/#{1,3} (.+)/g, '<strong>$1</strong>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/- (.+)/g, '• $1')
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+
+      const feedbackId = Date.now();
+      const shareText = currentLang === 'en'
+        ? encodeURIComponent("Vivekai gave me this legal information:\n\n" + data.response.substring(0, 300) + "...\n\nLearn more: https://vivekai.live")
+        : encodeURIComponent("Vivekaiले मलाई यो कानुनी जानकारी दियो:\n\n" + data.response.substring(0, 300) + "...\n\nथप जान्नुहोस्: https://vivekai.live");
+
+      const assistantDiv = document.createElement('div');
+      assistantDiv.className = 'message assistant';
+      assistantDiv.innerHTML = formatted; // safe: AI response from our own backend, not user input
+      messages.appendChild(assistantDiv);
+
+      const actionsDiv = document.createElement('div');
+      actionsDiv.style.cssText = 'display:flex;gap:8px;padding:0 4px;margin-top:-8px;flex-wrap:wrap;';
+
+      const upBtn = document.createElement('button');
+      upBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
+      upBtn.textContent = '👍';
+      upBtn.onclick = function() { sendFeedback(feedbackId, 'up', this); };
+
+      const downBtn = document.createElement('button');
+      downBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
+      downBtn.textContent = '👎';
+      downBtn.onclick = function() { sendFeedback(feedbackId, 'down', this); };
+
+      const waLink = document.createElement('a');
+      waLink.href = 'https://wa.me/?text=' + shareText;
+      waLink.target = '_blank';
+      waLink.style.cssText = 'background:#25D366;color:white;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;text-decoration:none;';
+      waLink.textContent = '📱 WhatsApp';
+
+      const fbLink = document.createElement('a');
+      fbLink.href = 'https://www.facebook.com/sharer/sharer.php?u=https://vivekai.live';
+      fbLink.target = '_blank';
+      fbLink.style.cssText = 'background:#1877F2;color:white;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;text-decoration:none;';
+      fbLink.textContent = '📘 Facebook';
+
+      actionsDiv.appendChild(upBtn);
+      actionsDiv.appendChild(downBtn);
+      actionsDiv.appendChild(waLink);
+      actionsDiv.appendChild(fbLink);
+      messages.appendChild(actionsDiv);
+      messages.scrollTop = messages.scrollHeight;
+    }
   </script>
 </body>
 </html>

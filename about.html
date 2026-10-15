@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ne">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>⚖️ Vivekai — How It Works</title>
+  <title>⚖️ Vivekai — यसले कसरी काम गर्छ / How It Works</title>
+  <meta name="description" content="Vivekai AI कानुनी सहायकले कसरी काम गर्छ — नेपाली र अंग्रेजीमा कानुनी जानकारी।">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -31,12 +32,31 @@
     }
     .header h1 { font-size: 24px; }
     .header p { font-size: 14px; opacity: 0.8; margin-top: 8px; }
-    .content {
-      padding: 30px;
+
+    .lang-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 20px 0;
     }
-    .section {
-      margin-bottom: 30px;
+    .lang-btn {
+      padding: 7px 20px;
+      border-radius: 20px;
+      border: 2px solid #003893;
+      background: white;
+      color: #003893;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
     }
+    .lang-btn.active {
+      background: #003893;
+      color: white;
+    }
+
+    .content { padding: 30px; }
+    .section { margin-bottom: 28px; }
     .section h2 {
       color: #003893;
       font-size: 18px;
@@ -52,7 +72,7 @@
     }
     .section ul {
       color: #444;
-      line-height: 1.8;
+      line-height: 1.9;
       font-size: 14px;
       padding-left: 20px;
     }
@@ -82,6 +102,12 @@
       color: #888;
       background: #f0f2f5;
     }
+
+    /* Language-specific content */
+    .np { display: block; }
+    .en { display: none; }
+    body.lang-en .np { display: none; }
+    body.lang-en .en { display: block; }
   </style>
 </head>
 <body>
@@ -91,20 +117,40 @@
       <p>Wisdom in Law — कानुनी प्रक्रिया सजिलो तरिकाले</p>
     </div>
 
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('np')" id="btn-np">नेपाली</button>
+      <button class="lang-btn" onclick="setLang('en')" id="btn-en">English</button>
+    </div>
+
     <div class="content">
+
+      <!-- WARNING BANNER -->
       <div class="warning">
-        ⚠️ Vivekai provides general legal INFORMATION only — not legal ADVICE. For serious matters, always consult a qualified lawyer.
+        <span class="np">⚠️ Vivekai ले सामान्य कानुनी जानकारी मात्र दिन्छ — पेशेवर कानुनी सल्लाह होइन। गम्भीर मुद्दाहरूमा योग्य वकिलसँग परामर्श गर्नुहोस्।</span>
+        <span class="en">⚠️ Vivekai provides general legal information only — not legal advice. For serious matters, always consult a qualified lawyer.</span>
       </div>
 
+      <!-- WHAT IS VIVEKAI -->
       <div class="section">
-        <h2>What is Vivekai?</h2>
-        <p>Vivekai is a free AI-powered legal information assistant built specifically for Nepali people. It answers legal questions in both Nepali and English — simply and clearly, without complicated legal language.</p>
-        <p>It was built by a Nepali CS graduate in the United States who wanted to make Nepal's legal system more accessible to ordinary people who cannot afford lawyers.</p>
+        <h2 class="np">Vivekai के हो?</h2>
+        <h2 class="en">What is Vivekai?</h2>
+        <p class="np">Vivekai नेपाली जनताको लागि बनाइएको निःशुल्क AI कानुनी जानकारी सहायक हो। यसले कानुनी प्रश्नहरूको जवाफ नेपाली र अंग्रेजी दुवै भाषामा सरल र स्पष्ट रूपमा दिन्छ।</p>
+        <p class="en">Vivekai is a free AI-powered legal information assistant built specifically for Nepali people. It answers legal questions in both Nepali and English — simply and clearly, without complicated legal language.</p>
+        <p class="np">यो अमेरिकामा बस्ने एक नेपाली CS स्नातकले बनाएको हो — जसको सपना थियो कि साधारण नेपाली मान्छेले वकिल खर्च नगरीकनै आफ्नो अधिकार बुझ्न सकून्।</p>
+        <p class="en">It was built by a Nepali CS graduate in the United States who wanted to make Nepal's legal system more accessible to ordinary people who cannot afford lawyers.</p>
       </div>
 
+      <!-- HOW IT WORKS -->
       <div class="section">
-        <h2>How does it work?</h2>
-        <ul>
+        <h2 class="np">यसले कसरी काम गर्छ?</h2>
+        <h2 class="en">How does it work?</h2>
+        <ul class="np">
+          <li>तपाईं नेपाली वा अंग्रेजीमा कानुनी प्रश्न सोध्नुहोस्</li>
+          <li>Vivekai को AI ले प्रश्न पढेर सम्बन्धित कानुनी जानकारी दिन्छ</li>
+          <li>जवाफहरू नेपालको आधिकारिक कानुन र ऐनहरूमा आधारित छन्</li>
+          <li>प्रत्येक जवाफको अन्तमा disclaimer स्वचालित रूपमा थपिन्छ</li>
+        </ul>
+        <ul class="en">
           <li>You type your legal question in Nepali or English</li>
           <li>Vivekai's AI reads your question and provides relevant legal information</li>
           <li>Answers are based on Nepal's official laws and legal codes</li>
@@ -112,9 +158,21 @@
         </ul>
       </div>
 
+      <!-- WHAT IT CAN HELP WITH -->
       <div class="section">
-        <h2>What Vivekai can help with</h2>
-        <ul>
+        <h2 class="np">Vivekai ले के मा सहयोग गर्छ?</h2>
+        <h2 class="en">What Vivekai can help with</h2>
+        <ul class="np">
+          <li>आफ्नो कानुनी अधिकार बुझ्न</li>
+          <li>जग्गा र सम्पत्ति सम्बन्धी प्रश्नहरू</li>
+          <li>श्रम र रोजगारी समस्याहरू</li>
+          <li>पारिवारिक कानुन — विवाह, सम्बन्धविच्छेद, उत्तराधिकार</li>
+          <li>फौजदारी कानुनका आधारभूत कुराहरू</li>
+          <li>व्यवसाय दर्ता प्रक्रिया</li>
+          <li>घरेलु हिंसा सम्बन्धी स्रोत र हेल्पलाइन</li>
+          <li>विदेश रोजगार मार्गदर्शन</li>
+        </ul>
+        <ul class="en">
           <li>Understanding your legal rights</li>
           <li>Land and property questions</li>
           <li>Labor and employment issues</li>
@@ -126,9 +184,17 @@
         </ul>
       </div>
 
+      <!-- WHAT IT CANNOT DO -->
       <div class="section">
-        <h2>What Vivekai cannot do</h2>
-        <ul>
+        <h2 class="np">Vivekai ले के गर्न सक्दैन?</h2>
+        <h2 class="en">What Vivekai cannot do</h2>
+        <ul class="np">
+          <li>तपाईंको व्यक्तिगत मुद्दामा विशेष कानुनी सल्लाह दिन सक्दैन</li>
+          <li>योग्य वकिललाई प्रतिस्थापन गर्न सक्दैन</li>
+          <li>हरेक जवाफको शुद्धता ग्यारेन्टी गर्न सक्दैन</li>
+          <li>अदालतमा तपाईंको प्रतिनिधित्व गर्न सक्दैन</li>
+        </ul>
+        <ul class="en">
           <li>Give specific legal advice for your personal case</li>
           <li>Replace a qualified lawyer</li>
           <li>Guarantee the accuracy of every answer</li>
@@ -136,19 +202,37 @@
         </ul>
       </div>
 
+      <!-- PRIVACY -->
       <div class="section">
-        <h2>Your Privacy</h2>
-        <p>Vivekai does not store your conversation messages permanently. Your chat session resets when you close the browser tab.</p>
-        <p>Like most web services, our server may retain standard technical logs (such as IP addresses and request timestamps) for security and operational purposes. We use Google Analytics for anonymous usage statistics. We do not sell or share your personal data with third parties. For full details, see our <a href="https://www.freeprivacypolicy.com/live/8c8ccab4-8754-4be7-8db4-f81840ae7162" target="_blank" style="color:#003893;">Privacy Policy</a>.</p>
-        <p><strong>Important:</strong> Do not share sensitive personal case details (names, addresses, case numbers) in your questions. Ask in general terms for best results.</p>
+        <h2 class="np">तपाईंको गोपनीयता</h2>
+        <h2 class="en">Your Privacy</h2>
+        <p class="np">Vivekai ले तपाईंको कुराकानी स्थायी रूपमा भण्डारण गर्दैन। तपाईंले ब्राउजर ट्याब बन्द गर्दा सत्र रिसेट हुन्छ।</p>
+        <p class="en">Vivekai does not store your conversation messages permanently. Your chat session resets when you close the browser tab.</p>
+        <p class="np">अन्य वेब सेवाहरू जस्तै, हाम्रो सर्भरले सुरक्षा र सञ्चालनका लागि प्राविधिक लगहरू (जस्तै IP ठेगाना र समय) राख्न सक्छ। हामी익명익 प्रयोग तथ्याङ्कको लागि Google Analytics प्रयोग गर्छौं। हामी तेस्रो पक्षसँग तपाईंको व्यक्तिगत डेटा बेच्दैनौं।</p>
+        <p class="en">Like most web services, our server may retain standard technical logs (such as IP addresses and request timestamps) for security and operational purposes. We use Google Analytics for anonymous usage statistics. We do not sell or share your personal data with third parties.</p>
+        <p class="np"><strong>महत्त्वपूर्ण:</strong> प्रश्नहरूमा व्यक्तिगत संवेदनशील विवरण (नाम, ठेगाना, मुद्दा नम्बर) नराख्नुहोस् — सामान्य प्रश्न सोध्दा राम्रो जवाफ पाउनुहुन्छ।</p>
+        <p class="en"><strong>Important:</strong> Do not share sensitive personal case details (names, addresses, case numbers) in your questions. Ask in general terms for best results.</p>
+        <p style="margin-top:8px;font-size:13px;">
+          <span class="np">थप जानकारीको लागि हाम्रो </span>
+          <span class="en">For full details, see our </span>
+          <a href="https://www.freeprivacypolicy.com/live/8c8ccab4-8754-4be7-8db4-f81840ae7162" target="_blank" style="color:#003893;">Privacy Policy</a>
+          <span class="np"> हेर्नुहोस्।</span><span class="en">.</span>
+        </p>
       </div>
 
+      <!-- CONTACT -->
       <div class="section">
-        <h2>Contact</h2>
-        <p>Questions or feedback? Email us at <a href="mailto:lohanim77@gmail.com" style="color: #003893;">lohanim77@gmail.com</a></p>
+        <h2 class="np">सम्पर्क</h2>
+        <h2 class="en">Contact</h2>
+        <p class="np">प्रश्न वा सुझाव छ? इमेल गर्नुहोस्: <a href="mailto:lohanim77@gmail.com" style="color:#003893;">lohanim77@gmail.com</a></p>
+        <p class="en">Questions or feedback? Email us at <a href="mailto:lohanim77@gmail.com" style="color:#003893;">lohanim77@gmail.com</a></p>
       </div>
 
-      <a href="/" class="back-btn">← Back to Vivekai</a>
+      <a href="/" class="back-btn">
+        <span class="np">← Vivekai मा फर्कनुहोस्</span>
+        <span class="en">← Back to Vivekai</span>
+      </a>
+
     </div>
 
     <div class="footer">
@@ -156,7 +240,24 @@
       <a href="https://www.freeprivacypolicy.com/live/8c8ccab4-8754-4be7-8db4-f81840ae7162" target="_blank" style="color: #003893; text-decoration: none;">Privacy Policy</a>
       &nbsp;|&nbsp;
       <a href="https://www.freeprivacypolicy.com/live/6f3649b7-0b82-4ed2-8d1e-14918d53d5c4" target="_blank" style="color: #003893; text-decoration: none;">Terms of Service</a>
+      &nbsp;|&nbsp;
+      <a href="mailto:lohanim77@gmail.com" style="color: #003893; text-decoration: none;">Contact Us</a>
     </div>
   </div>
+
+  <script>
+    function setLang(lang) {
+      document.body.className = lang === 'en' ? 'lang-en' : '';
+      document.getElementById('btn-np').classList.toggle('active', lang === 'np');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      localStorage.setItem('vivekaiLang', lang);
+    }
+
+    // Remember user's language choice
+    try {
+      const saved = localStorage.getItem('vivekaiLang');
+      if (saved === 'en') setLang('en');
+    } catch(e) {}
+  </script>
 </body>
 </html>

@@ -32,6 +32,29 @@
     }
     .header h1 { font-size: 22px; }
     .header p { font-size: 14px; opacity: 0.8; margin-top: 8px; }
+
+    .lang-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 20px 0;
+    }
+    .lang-btn {
+      padding: 7px 20px;
+      border-radius: 20px;
+      border: 2px solid #003893;
+      background: white;
+      color: #003893;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    .lang-btn.active {
+      background: #003893;
+      color: white;
+    }
+
     .content { padding: 30px; }
     .faq-item {
       border-bottom: 1px solid #f0f2f5;
@@ -43,7 +66,6 @@
       color: #003893;
       font-size: 15px;
       margin-bottom: 10px;
-      cursor: pointer;
     }
     .answer {
       color: #444;
@@ -86,96 +108,193 @@
       background: #f0f2f5;
       margin-top: 20px;
     }
+
+    /* Language toggle classes */
+    .np { display: block; }
+    .en { display: none; }
+    body.lang-en .np { display: none; }
+    body.lang-en .en { display: block; }
+
+    /* inline spans need inline display */
+    span.np { display: inline; }
+    span.en { display: none; }
+    body.lang-en span.np { display: none; }
+    body.lang-en span.en { display: inline; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>⚖️ सामान्य कानुनी प्रश्नहरू</h1>
-      <p>नेपाली मानिसहरूले सबैभन्दा बढी सोध्ने कानुनी प्रश्नहरू</p>
+      <h1>⚖️ <span class="np">सामान्य कानुनी प्रश्नहरू</span><span class="en">Frequently Asked Legal Questions</span></h1>
+      <p><span class="np">नेपाली मानिसहरूले सबैभन्दा बढी सोध्ने कानुनी प्रश्नहरू</span><span class="en">Most common legal questions from Nepali people</span></p>
+    </div>
+
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('np')" id="btn-np">नेपाली</button>
+      <button class="lang-btn" onclick="setLang('en')" id="btn-en">English</button>
     </div>
 
     <div class="content">
 
+      <!-- DISCLAIMER -->
       <div style="background:#fff3cd;color:#856404;padding:14px 18px;border-radius:8px;font-size:13px;line-height:1.6;margin-bottom:20px;">
-        ⚠️ यहाँ दिइएको जानकारी सामान्य प्रकृतिको हो र तपाईंको विशेष परिस्थितिमा लागू नहुन सक्छ। कानुन समयसमयमा परिवर्तन हुन्छ। आफ्नो मुद्दाको लागि योग्य वकिलसँग परामर्श गर्नुहोस्।<br>
-        <em>This information is general in nature and may not reflect the most current laws. For advice specific to your situation, consult a qualified Nepali lawyer.</em>
+        <span class="np">⚠️ यहाँ दिइएको जानकारी सामान्य प्रकृतिको हो र तपाईंको विशेष परिस्थितिमा लागू नहुन सक्छ। कानुन समयसमयमा परिवर्तन हुन्छ। आफ्नो मुद्दाको लागि योग्य वकिलसँग परामर्श गर्नुहोस्।</span>
+        <span class="en">⚠️ This information is general in nature and may not reflect the most current laws. Laws change over time. For advice specific to your situation, consult a qualified Nepali lawyer.</span>
       </div>
 
-      <div class="category">🏠 जग्गा र सम्पत्ति</div>
+      <!-- LAND & PROPERTY -->
+      <div class="category">🏠 <span class="np">जग्गा र सम्पत्ति</span><span class="en">Land &amp; Property</span></div>
 
       <div class="faq-item">
-        <div class="question">जग्गा किन्दा के के कागजात चाहिन्छ?</div>
-        <div class="answer">लालपुर्जा, नागरिकता प्रमाणपत्र, विक्री सम्झौता, र मालपोत कार्यालयको कागजात आवश्यक पर्छ। जग्गा रोक्का छ कि छैन पहिले जाँच गर्नुहोस्।<br><br>
-        <a href="/?q=जग्गा किन्दा के के कागजात चाहिन्छ" class="try-btn">Vivekai सँग सोध्नुहोस् →</a></div>
-      </div>
-
-      <div class="faq-item">
-        <div class="question">मेरो छिमेकीले मेरो जग्गामा घर बनाउँदैछ, के गर्ने?</div>
-        <div class="answer">तुरुन्त लिखित सूचना दिनुहोस् र फोटो/भिडियो प्रमाण राख्नुहोस्। वडा कार्यालय र नापी कार्यालयमा उजुरी दिनुहोस्। जिल्ला अदालतबाट अन्तरिम आदेश लिन सकिन्छ।<br><br>
-        <a href="/" class="try-btn">Vivekai सँग सोध्नुहोस् →</a></div>
-      </div>
-
-      <div class="faq-item">
-        <div class="question">बाबुको मृत्यु पछि जग्गा नाममा कसरी गर्ने?</div>
-        <div class="answer">मृत्यु दर्ता, नाता प्रमाणपत्र, र सबै हकवालाको सहमति लिएर मालपोत कार्यालयमा नाम सारी गर्नुहोस्। सामान्यतः १-३ महिना लाग्छ।<br><br>
-        <a href="/" class="try-btn">Vivekai सँग सोध्नुहोस् →</a></div>
-      </div>
-
-      <div class="category">💼 श्रम र रोजगार</div>
-
-      <div class="faq-item">
-        <div class="question">मालिकले तलब दिएनन् भने के गर्ने?</div>
-        <div class="answer">पहिले लिखित माग गर्नुहोस्। समाधान नभए नजिकको श्रम कार्यालयमा उजुरी दिनुहोस् — यो निःशुल्क छ। श्रम ऐन २०७४ अनुसार समयमा तलब पाउनु तपाईंको अधिकार हो।<br><br>
-        <a href="/" class="try-btn">Vivekai सँग सोध्नुहोस् →</a></div>
+        <div class="question">
+          <span class="np">जग्गा किन्दा के के कागजात चाहिन्छ?</span>
+          <span class="en">What documents are needed to buy land?</span>
+        </div>
+        <div class="answer">
+          <span class="np">लालपुर्जा, नागरिकता प्रमाणपत्र, विक्री सम्झौता, र मालपोत कार्यालयको कागजात आवश्यक पर्छ। जग्गा रोक्का छ कि छैन पहिले जाँच गर्नुहोस्।</span>
+          <span class="en">You need the land certificate (lalpurja), citizenship certificate, sale agreement, and land revenue office documents. Always check if the land is frozen (rokka) before purchasing.</span>
+          <br><br>
+          <a href="/" class="try-btn"><span class="np">Vivekai सँग सोध्नुहोस् →</span><span class="en">Ask Vivekai →</span></a>
+        </div>
       </div>
 
       <div class="faq-item">
-        <div class="question">नेपालमा न्यूनतम तलब कति हो?</div>
-        <div class="answer">नेपालको न्यूनतम तलब रु. १७,३०० प्रति महिना (२०२४ अनुसार) छ। यो सरकारले समय समयमा संशोधन गर्छ। <strong>नवीनतम दर श्रम विभागको आधिकारिक वेबसाइटमा जाँच गर्नुहोस्।</strong><br><br>
-        <a href="/" class="try-btn">Vivekai सँग सोध्नुहोस् →</a></div>
+        <div class="question">
+          <span class="np">मेरो छिमेकीले मेरो जग्गामा घर बनाउँदैछ, के गर्ने?</span>
+          <span class="en">My neighbor is building on my land. What should I do?</span>
+        </div>
+        <div class="answer">
+          <span class="np">तुरुन्त लिखित सूचना दिनुहोस् र फोटो/भिडियो प्रमाण राख्नुहोस्। वडा कार्यालय र नापी कार्यालयमा उजुरी दिनुहोस्। जिल्ला अदालतबाट अन्तरिम आदेश लिन सकिन्छ।</span>
+          <span class="en">Send a written notice immediately and document everything with photos/video. File a complaint at the ward office and Survey Office. You can also obtain an interim order from the District Court.</span>
+          <br><br>
+          <a href="/" class="try-btn"><span class="np">Vivekai सँग सोध्नुहोस् →</span><span class="en">Ask Vivekai →</span></a>
+        </div>
       </div>
 
-      <div class="category">👨‍👩‍👧 परिवार र विवाह</div>
+      <div class="faq-item">
+        <div class="question">
+          <span class="np">बाबुको मृत्यु पछि जग्गा नाममा कसरी गर्ने?</span>
+          <span class="en">How to transfer land to my name after father's death?</span>
+        </div>
+        <div class="answer">
+          <span class="np">मृत्यु दर्ता, नाता प्रमाणपत्र, र सबै हकवालाको सहमति लिएर मालपोत कार्यालयमा नाम सारी गर्नुहोस्। सामान्यतः १-३ महिना लाग्छ।</span>
+          <span class="en">Bring the death certificate, relationship certificate, and consent from all legal heirs to the land revenue office for the name transfer. It usually takes 1–3 months.</span>
+          <br><br>
+          <a href="/" class="try-btn"><span class="np">Vivekai सँग सोध्नुहोस् →</span><span class="en">Ask Vivekai →</span></a>
+        </div>
+      </div>
+
+      <!-- LABOR -->
+      <div class="category">💼 <span class="np">श्रम र रोजगार</span><span class="en">Labor &amp; Employment</span></div>
 
       <div class="faq-item">
-        <div class="question">नेपालमा विवाह गर्न कति उमेर चाहिन्छ?</div>
-        <div class="answer">नेपालमा विवाहको न्यूनतम उमेर २० वर्ष हो — छोरा र छोरी दुवैको लागि। यो भन्दा कम उमेरमा विवाह गराउनु कानुनी अपराध हो।<br><br>
-        <a href="/" class="try-btn">Vivekai सँग सोध्नुहोस् →</a></div>
+        <div class="question">
+          <span class="np">मालिकले तलब दिएनन् भने के गर्ने?</span>
+          <span class="en">What can I do if my employer doesn't pay my salary?</span>
+        </div>
+        <div class="answer">
+          <span class="np">पहिले लिखित माग गर्नुहोस्। समाधान नभए नजिकको श्रम कार्यालयमा उजुरी दिनुहोस् — यो निःशुल्क छ। श्रम ऐन २०७४ अनुसार समयमा तलब पाउनु तपाईंको अधिकार हो।</span>
+          <span class="en">First send a written demand. If unresolved, file a complaint at your nearest Labor Office — it's free. Under the Labour Act 2074, receiving timely payment is your right.</span>
+          <br><br>
+          <a href="/" class="try-btn"><span class="np">Vivekai सँग सोध्नुहोस् →</span><span class="en">Ask Vivekai →</span></a>
+        </div>
       </div>
 
       <div class="faq-item">
-        <div class="question">सम्पत्तिमा छोरीको हक छ कि छैन?</div>
-        <div class="answer">हो, मुलुकी देवानी संहिता २०७४ अनुसार छोरा र छोरीको सम्पत्तिमा समान अधिकार छ। बाबुको सम्पत्तिमा छोरीले पनि बराबर हिस्सा पाउँछन्।<br><br>
-        <a href="/" class="try-btn">Vivekai सँग सोध्नुहोस् →</a></div>
+        <div class="question">
+          <span class="np">नेपालमा न्यूनतम तलब कति हो?</span>
+          <span class="en">What is the minimum wage in Nepal?</span>
+        </div>
+        <div class="answer">
+          <span class="np">नेपालको न्यूनतम तलब रु. १७,३०० प्रति महिना (२०२४ अनुसार) छ। यो सरकारले समय समयमा संशोधन गर्छ। <strong>नवीनतम दर श्रम विभागको आधिकारिक वेबसाइटमा जाँच गर्नुहोस्।</strong></span>
+          <span class="en">Nepal's minimum wage is NPR 17,300 per month (as of 2024). This is revised by the government periodically. <strong>Always verify the current rate on the Department of Labour's official website.</strong></span>
+          <br><br>
+          <a href="/" class="try-btn"><span class="np">Vivekai सँग सोध्नुहोस् →</span><span class="en">Ask Vivekai →</span></a>
+        </div>
       </div>
 
-      <div class="category">🆘 घरेलु हिंसा र सुरक्षा</div>
+      <!-- FAMILY -->
+      <div class="category">👨‍👩‍👧 <span class="np">परिवार र विवाह</span><span class="en">Family &amp; Marriage</span></div>
 
       <div class="faq-item">
-        <div class="question">घरेलु हिंसा भयो भने कहाँ जाने?</div>
-        <div class="answer">तुरुन्त <strong>१४४</strong> (महिला हेल्पलाइन) वा <strong>१००</strong> (प्रहरी) मा फोन गर्नुहोस्। नजिकको प्रहरी चौकीमा उजुरी दिनुहोस्। घरेलु हिंसा ऐन २०६६ ले तपाईंलाई पूर्ण सुरक्षा दिन्छ।<br><br>
-        <a href="/" class="try-btn">Vivekai सँग सोध्नुहोस् →</a></div>
+        <div class="question">
+          <span class="np">नेपालमा विवाह गर्न कति उमेर चाहिन्छ?</span>
+          <span class="en">What is the minimum age to get married in Nepal?</span>
+        </div>
+        <div class="answer">
+          <span class="np">नेपालमा विवाहको न्यूनतम उमेर २० वर्ष हो — छोरा र छोरी दुवैको लागि। यो भन्दा कम उमेरमा विवाह गराउनु कानुनी अपराध हो।</span>
+          <span class="en">The minimum marriage age in Nepal is 20 years — for both men and women. Arranging marriage below this age is a criminal offense.</span>
+          <br><br>
+          <a href="/" class="try-btn"><span class="np">Vivekai सँग सोध्नुहोस् →</span><span class="en">Ask Vivekai →</span></a>
+        </div>
       </div>
 
-      <div class="category">🌍 विदेश रोजगार</div>
-
       <div class="faq-item">
-        <div class="question">विदेश जानु अघि के जान्नुपर्छ?</div>
-        <div class="answer">वैध पासपोर्ट, भिसा, र श्रम स्वीकृति (DoFE) आवश्यक छ। म्यानपावर कम्पनी दर्ता भएको छ कि छैन जाँच गर्नुहोस्। विदेश रोजगार ऐन २०६४ अनुसार तपाईंका अधिकारहरू जान्नुहोस्।<br><br>
-        <a href="/" class="try-btn">Vivekai सँग सोध्नुहोस् →</a></div>
+        <div class="question">
+          <span class="np">सम्पत्तिमा छोरीको हक छ कि छैन?</span>
+          <span class="en">Do daughters have property rights in Nepal?</span>
+        </div>
+        <div class="answer">
+          <span class="np">हो, मुलुकी देवानी संहिता २०७४ अनुसार छोरा र छोरीको सम्पत्तिमा समान अधिकार छ। बाबुको सम्पत्तिमा छोरीले पनि बराबर हिस्सा पाउँछन्।</span>
+          <span class="en">Yes. Under the Muluki Civil Code 2074, sons and daughters have equal property rights. Daughters are entitled to an equal share of the father's property.</span>
+          <br><br>
+          <a href="/" class="try-btn"><span class="np">Vivekai सँग सोध्नुहोस् →</span><span class="en">Ask Vivekai →</span></a>
+        </div>
       </div>
 
-      <div class="category">🪪 नागरिकता</div>
+      <!-- DOMESTIC VIOLENCE -->
+      <div class="category">🆘 <span class="np">घरेलु हिंसा र सुरक्षा</span><span class="en">Domestic Violence &amp; Safety</span></div>
 
       <div class="faq-item">
-        <div class="question">नागरिकता हरायो भने के गर्ने?</div>
-        <div class="answer">जिल्ला प्रशासन कार्यालयमा जनुहोस्। जन्म दर्ता र अभिभावकको नागरिकता लिएर जाँदा दोस्रो प्रतिलिपि पाउनुहुन्छ। nagrikta.moha.gov.np मा अनलाइन पनि आवेदन गर्न सकिन्छ।<br><br>
-        <a href="/" class="try-btn">Vivekai सँग सोध्नुहोस् →</a></div>
+        <div class="question">
+          <span class="np">घरेलु हिंसा भयो भने कहाँ जाने?</span>
+          <span class="en">Where to go if there is domestic violence?</span>
+        </div>
+        <div class="answer">
+          <span class="np">तुरुन्त <strong>१४४</strong> (महिला हेल्पलाइन) वा <strong>१००</strong> (प्रहरी) मा फोन गर्नुहोस्। नजिकको प्रहरी चौकीमा उजुरी दिनुहोस्। घरेलु हिंसा ऐन २०६६ ले तपाईंलाई पूर्ण सुरक्षा दिन्छ।</span>
+          <span class="en">Call <strong>144</strong> (Women's Helpline) or <strong>100</strong> (Police) immediately. File a complaint at the nearest police station. The Domestic Violence Act 2066 gives you full legal protection.</span>
+          <br><br>
+          <a href="/" class="try-btn"><span class="np">Vivekai सँग सोध्नुहोस् →</span><span class="en">Ask Vivekai →</span></a>
+        </div>
+      </div>
+
+      <!-- FOREIGN EMPLOYMENT -->
+      <div class="category">🌍 <span class="np">विदेश रोजगार</span><span class="en">Foreign Employment</span></div>
+
+      <div class="faq-item">
+        <div class="question">
+          <span class="np">विदेश जानु अघि के जान्नुपर्छ?</span>
+          <span class="en">What do I need to know before going abroad for work?</span>
+        </div>
+        <div class="answer">
+          <span class="np">वैध पासपोर्ट, भिसा, र श्रम स्वीकृति (DoFE) आवश्यक छ। म्यानपावर कम्पनी दर्ता भएको छ कि छैन जाँच गर्नुहोस्। विदेश रोजगार ऐन २०६४ अनुसार तपाईंका अधिकारहरू जान्नुहोस्।</span>
+          <span class="en">You need a valid passport, visa, and labor approval from DoFE. Verify that your manpower company is registered. Know your rights under the Foreign Employment Act 2064.</span>
+          <br><br>
+          <a href="/" class="try-btn"><span class="np">Vivekai सँग सोध्नुहोस् →</span><span class="en">Ask Vivekai →</span></a>
+        </div>
+      </div>
+
+      <!-- CITIZENSHIP -->
+      <div class="category">🪪 <span class="np">नागरिकता</span><span class="en">Citizenship</span></div>
+
+      <div class="faq-item">
+        <div class="question">
+          <span class="np">नागरिकता हरायो भने के गर्ने?</span>
+          <span class="en">What to do if I lose my citizenship certificate?</span>
+        </div>
+        <div class="answer">
+          <span class="np">जिल्ला प्रशासन कार्यालयमा जनुहोस्। जन्म दर्ता र अभिभावकको नागरिकता लिएर जाँदा दोस्रो प्रतिलिपि पाउनुहुन्छ। nagrikta.moha.gov.np मा अनलाइन पनि आवेदन गर्न सकिन्छ।</span>
+          <span class="en">Go to your District Administration Office with your birth certificate and a parent's citizenship. You can get a duplicate copy. You can also apply online at nagrikta.moha.gov.np.</span>
+          <br><br>
+          <a href="/" class="try-btn"><span class="np">Vivekai सँग सोध्नुहोस् →</span><span class="en">Ask Vivekai →</span></a>
+        </div>
       </div>
 
       <br>
-      <a href="/" class="back-btn">← Vivekai मा फर्कनुहोस्</a>
+      <a href="/" class="back-btn">
+        <span class="np">← Vivekai मा फर्कनुहोस्</span>
+        <span class="en">← Back to Vivekai</span>
+      </a>
     </div>
   </div>
 
@@ -183,7 +302,26 @@
     © 2026 Vivekai &nbsp;|&nbsp;
     <a href="https://www.freeprivacypolicy.com/live/8c8ccab4-8754-4be7-8db4-f81840ae7162" target="_blank" style="color: #003893; text-decoration: none;">Privacy Policy</a>
     &nbsp;|&nbsp;
-    <a href="/about.html" style="color: #003893; text-decoration: none;">How It Works</a>
+    <a href="https://www.freeprivacypolicy.com/live/6f3649b7-0b82-4ed2-8d1e-14918d53d5c4" target="_blank" style="color: #003893; text-decoration: none;">Terms of Service</a>
+    &nbsp;|&nbsp;
+    <a href="/about.html" style="color: #003893; text-decoration: none;">
+      <span class="np">यसले कसरी काम गर्छ</span><span class="en">How It Works</span>
+    </a>
   </div>
+
+  <script>
+    function setLang(lang) {
+      document.body.className = lang === 'en' ? 'lang-en' : '';
+      document.getElementById('btn-np').classList.toggle('active', lang === 'np');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      try { localStorage.setItem('vivekaiLang', lang); } catch(e) {}
+    }
+
+    // Load saved language preference
+    try {
+      const saved = localStorage.getItem('vivekaiLang');
+      if (saved === 'en') setLang('en');
+    } catch(e) {}
+  </script>
 </body>
 </html>
