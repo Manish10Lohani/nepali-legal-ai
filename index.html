@@ -164,6 +164,7 @@
     gtag('js', new Date());
     gtag('config', 'G-Q5JL0DP4RX');
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -360,7 +361,7 @@
 
       const assistantDiv = document.createElement('div');
       assistantDiv.className = 'message assistant';
-      assistantDiv.innerHTML = formatted; // safe: AI response from our own backend, not user input
+      assistantDiv.innerHTML = DOMPurify.sanitize(formatted); // safe: AI response from our own backend, not user input
       messages.appendChild(assistantDiv);
 
       const actionsDiv = document.createElement('div');

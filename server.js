@@ -38,6 +38,14 @@ app.post("/chat", async (req, res) => {
     const userMessage = req.body.message;
     const sessionId = req.headers['x-session-id'] || 'default';
 
+    // Input validation
+    if (!userMessage || typeof userMessage !== "string" || userMessage.trim().length === 0) {
+      return res.status(400).json({ response: "Invalid message input." });
+    }
+    if (userMessage.length > 2000) {
+      return res.status(400).json({ response: "Message is too long. Please shorten your question." });
+    }
+
     if (!sessions[sessionId]) {
       sessions[sessionId] = { history: [], lastActive: Date.now() };
     }
@@ -62,18 +70,23 @@ app.post("/chat", async (req, res) => {
 
 तपाईंको मुख्य काम:
 - साधारण नेपाली मानिसहरूलाई कानुनी जानकारी सरल, स्पष्ट र व्यावहारिक भाषामा दिनु।
-- CRITICAL: Respond in NEPALI (not Hindi) for Nepali script questions. Respond in English for English questions. Never use Hindi.
-- तपाईं सधैं नेपाली भाषामा जवाफ दिनुहोस् — हिन्दी होइन।
+- CRITICAL LANGUAGE RULE: You MUST detect the language of the user's question and respond in the SAME language.
+  - If the question is in Nepali script (देवनागरी) → respond in NEPALI only. Never use Hindi.
+  - If the question is in English → respond in ENGLISH only. Do not switch to Nepali.
+  - If the question is in Romanized Nepali (Nepali words written in English letters, e.g. "mero bauko jagga", "divorce kasari garne") → respond in NEPALI (Devanagari script).
+  - If mixed → use whichever language dominates the question.
+- This language rule overrides everything else. Never respond in a different language than the question.
 
 **सधैं पालना गर्नुपर्ने नियमहरू:**
 
 1. **तपाईं कानुनी सल्लाहकार होइन** — सामान्य कानुनी जानकारी मात्र दिनुहोस्।
 2. **जवाफ अत्यन्त छोटो राख्नुहोस्** — बढीमा ३ बुँदा, प्रत्येकमा १-२ वाक्य मात्र।
-3. **संवेदनशील विषयमा** — घरेलु हिंसा/यौन उत्पीडनमा हेल्पलाइन दिनुहोस् (१४४, १००)।
+3. **संवेदनशील विषयमा** — घरेलु हिंसा/यौन उत्पीडनमा हेल्पलाइन दिनुहोस् (११४५, १००)।
 4. **टोन**: दयालु, शान्त र विश्वासिलो।
 5. कानुन बाहेकका विषयमा जवाफ नदिनुहोस्।
 6. जवाफको अन्तमा disclaimer नथप्नुहोस् — त्यो automatically थपिन्छ।
-7. ALWAYS end your answer with the relevant law. Format: "📖 स्रोत: [law name]" for Nepali or "📖 Source: [law name]" for English. This is mandatory for every response.`,
+7. ALWAYS end your answer with the relevant law. Format: "📖 स्रोत: [law name]" for Nepali or "📖 Source: [law name]" for English. This is mandatory for every response.
+8. **कानुन उद्धरण नियम**: कहिल्यै खारेज भएको "मुलुकी ऐन २०२०" उल्लेख नगर्नुहोस्। हाल लागू भएका "मुलुकी देवानी संहिता २०७४" वा "मुलुकी अपराध संहिता २०७४" मात्र प्रयोग गर्नुहोस्। यदि तपाईंलाई आधिकारिक कानुनको नाम वा दफा ठ्याक्कै थाहा छैन भने, दफा मनगढन्ते नबनाउनुहोस्। स्रोत थाहा नभए "📖 स्रोत: नेपाल कानुन आयोग (सम्बन्धित ऐन प्रमाणीकरण हुन बाँकी)" लेख्नुहोस्।`,
           cache_control: {"type": "ephemeral"}
         }
       ],
@@ -126,10 +139,12 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 
   setInterval(() => {
-    https.get("https://vivekai.live", (res) => {
+    const req = https.get("https://vivekai.live", (res) => {
+      res.resume();
       console.log(`Keep-alive ping: ${res.statusCode}`);
-    }).on("error", (e) => {
-      console.log(`Keep-alive error: ${e.message}`);
+    });
+    req.on("error", (err) => {
+      console.error(`Keep-alive error: ${err.message}`);
     });
   }, 14 * 60 * 1000);
 });
