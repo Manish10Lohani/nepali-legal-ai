@@ -195,7 +195,12 @@ function askSuggestion(text) {
 }
 
 async function sendFeedback(id, type, btn) {
-  btn.parentElement.innerHTML = type === 'up' ? '✅ धन्यवाद!' : '🙏 धन्यवाद! सुधार गर्नेछौं।';
+  const container = btn.parentElement;
+  while (container.firstChild) container.removeChild(container.firstChild);
+  const msg = document.createElement('span');
+  msg.style.cssText = 'font-size:13px;color:#666;padding:4px 10px;';
+  msg.textContent = type === 'up' ? '✅ धन्यवाद!' : '🙏 धन्यवाद! सुधार गर्नेछौं।';
+  container.appendChild(msg);
   await fetch("/feedback", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -209,10 +214,17 @@ async function sendMessage() {
   const text = input.value.trim();
   if (!text) return;
 
-  messages.innerHTML += `<div class="message user">${text}</div>`;
+  const userDiv = document.createElement('div');
+  userDiv.className = 'message user';
+  userDiv.textContent = text;
+  messages.appendChild(userDiv);
   input.value = "";
 
-  messages.innerHTML += `<div class="message typing" id="typing">सहायक लेख्दैछ... <div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'message typing';
+  typingDiv.id = 'typing';
+  typingDiv.innerHTML = 'सहायक लेख्दैछ... <div class="typing-dots"><span></span><span></span><span></span></div>';
+  messages.appendChild(typingDiv);
   messages.scrollTop = messages.scrollHeight;
 
   const sessionId = sessionStorage.getItem('vivekaiSession') || Math.random().toString(36).substr(2, 9);
@@ -239,16 +251,43 @@ async function sendMessage() {
     .replace(/\n/g, '<br>');
 
   const feedbackId = Date.now();
-const shareText = encodeURIComponent("Vivekaiले मलाई यो कानुनी जानकारी दियो:\n\n" + data.response.substring(0, 300) + "...\n\nथप जान्नुहोस्: https://vivekai.live");
-messages.innerHTML += `
-  <div class="message assistant">${formatted}</div>
-  <div style="display: flex; gap: 8px; padding: 0 4px; margin-top: -8px; flex-wrap: wrap;">
-    <button onclick="sendFeedback('${feedbackId}', 'up', this)" style="background: none; border: 1px solid #ddd; border-radius: 12px; padding: 4px 10px; cursor: pointer; font-size: 13px; color: #666;">👍</button>
-    <button onclick="sendFeedback('${feedbackId}', 'down', this)" style="background: none; border: 1px solid #ddd; border-radius: 12px; padding: 4px 10px; cursor: pointer; font-size: 13px; color: #666;">👎</button>
-    <a href="https://wa.me/?text=${shareText}" target="_blank" style="background: #25D366; color: white; border: none; border-radius: 12px; padding: 4px 10px; cursor: pointer; font-size: 13px; text-decoration: none;">📱 WhatsApp</a>
-    <a href="https://www.facebook.com/sharer/sharer.php?u=https://vivekai.live" target="_blank" style="background: #1877F2; color: white; border: none; border-radius: 12px; padding: 4px 10px; cursor: pointer; font-size: 13px; text-decoration: none;">📘 Facebook</a>
-  </div>
-`;
+  const shareText = encodeURIComponent("Vivekaiले मलाई यो कानुनी जानकारी दियो:\n\n" + data.response.substring(0, 300) + "...\n\nथप जान्नुहोस्: https://vivekai.live");
+
+  const assistantDiv = document.createElement('div');
+  assistantDiv.className = 'message assistant';
+  assistantDiv.innerHTML = formatted; // safe: AI response from our own backend, not user input
+  messages.appendChild(assistantDiv);
+
+  const actionsDiv = document.createElement('div');
+  actionsDiv.style.cssText = 'display:flex;gap:8px;padding:0 4px;margin-top:-8px;flex-wrap:wrap;';
+
+  const upBtn = document.createElement('button');
+  upBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
+  upBtn.textContent = '👍';
+  upBtn.onclick = function() { sendFeedback(feedbackId, 'up', this); };
+
+  const downBtn = document.createElement('button');
+  downBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
+  downBtn.textContent = '👎';
+  downBtn.onclick = function() { sendFeedback(feedbackId, 'down', this); };
+
+  const waLink = document.createElement('a');
+  waLink.href = 'https://wa.me/?text=' + shareText;
+  waLink.target = '_blank';
+  waLink.style.cssText = 'background:#25D366;color:white;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;text-decoration:none;';
+  waLink.textContent = '📱 WhatsApp';
+
+  const fbLink = document.createElement('a');
+  fbLink.href = 'https://www.facebook.com/sharer/sharer.php?u=https://vivekai.live';
+  fbLink.target = '_blank';
+  fbLink.style.cssText = 'background:#1877F2;color:white;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;text-decoration:none;';
+  fbLink.textContent = '📘 Facebook';
+
+  actionsDiv.appendChild(upBtn);
+  actionsDiv.appendChild(downBtn);
+  actionsDiv.appendChild(waLink);
+  actionsDiv.appendChild(fbLink);
+  messages.appendChild(actionsDiv);
   messages.scrollTop = messages.scrollHeight;
 }
   </script>
