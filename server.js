@@ -22,16 +22,13 @@ app.use("/chat", limiter);
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-const sessions = {};
+const { LRUCache } = require("lru-cache");
 
-setInterval(() => {
-  const oneHourAgo = Date.now() - (60 * 60 * 1000);
-  Object.keys(sessions).forEach(sessionId => {
-    if (sessions[sessionId].lastActive < oneHourAgo) {
-      delete sessions[sessionId];
-    }
-  });
-}, 30 * 60 * 1000);
+const sessions = new LRUCache({
+  max: 500,                        // max 500 concurrent sessions
+  ttl: 1000 * 60 * 60,            // auto-expire after 1 hour
+  ttlAutopurge: true               // clean up expired entries automatically
+});
 
 app.post("/chat", async (req, res) => {
   try {
@@ -46,19 +43,19 @@ app.post("/chat", async (req, res) => {
       return res.status(400).json({ response: "Message is too long. Please shorten your question." });
     }
 
-    if (!sessions[sessionId]) {
-      sessions[sessionId] = { history: [], lastActive: Date.now() };
-    }
+    if (!sessions.has(sessionId)) {
+  sessions.set(sessionId, { history: [] });
+}
 
-    sessions[sessionId].lastActive = Date.now();
-    sessions[sessionId].history.push({
-      role: "user",
-      content: userMessage
-    });
+const session = sessions.get(sessionId);
+session.history.push({
+  role: "user",
+  content: userMessage
+});
 
-    if (sessions[sessionId].history.length > 6) {
-      sessions[sessionId].history = sessions[sessionId].history.slice(-6);
-    }
+if (session.history.length > 6) {
+  session.history = session.history.slice(-6);
+}
 
     const message = await client.messages.create({
       model: "claude-haiku-4-5",
@@ -90,7 +87,10 @@ app.post("/chat", async (req, res) => {
           cache_control: {"type": "ephemeral"}
         }
       ],
-      messages: sessions[sessionId].history
+      sessions[sessionId].history.push({
+  role: "assistant",
+  content: response
+});
     });
 
     const inputTokens = message.usage.input_tokens;
