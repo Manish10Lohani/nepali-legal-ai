@@ -3,6 +3,7 @@ const Anthropic = require("@anthropic-ai/sdk");
 const path = require("path");
 const rateLimit = require("express-rate-limit");
 const https = require("https");
+const { LRUCache } = require("lru-cache");
 require("dotenv").config();
 
 const client = new Anthropic({
@@ -22,12 +23,10 @@ app.use("/chat", limiter);
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-const { LRUCache } = require("lru-cache");
-
 const sessions = new LRUCache({
-  max: 500,                        // max 500 concurrent sessions
-  ttl: 1000 * 60 * 60,            // auto-expire after 1 hour
-  ttlAutopurge: true               // clean up expired entries automatically
+  max: 500,
+  ttl: 1000 * 60 * 60,
+  ttlAutopurge: true
 });
 
 app.post("/chat", async (req, res) => {
@@ -35,7 +34,6 @@ app.post("/chat", async (req, res) => {
     const userMessage = req.body.message;
     const sessionId = req.headers['x-session-id'] || 'default';
 
-    // Input validation
     if (!userMessage || typeof userMessage !== "string" || userMessage.trim().length === 0) {
       return res.status(400).json({ response: "Invalid message input." });
     }
@@ -44,18 +42,18 @@ app.post("/chat", async (req, res) => {
     }
 
     if (!sessions.has(sessionId)) {
-  sessions.set(sessionId, { history: [] });
-}
+      sessions.set(sessionId, { history: [] });
+    }
 
-const session = sessions.get(sessionId);
-session.history.push({
-  role: "user",
-  content: userMessage
-});
+    const session = sessions.get(sessionId);
+    session.history.push({
+      role: "user",
+      content: userMessage
+    });
 
-if (session.history.length > 6) {
-  session.history = session.history.slice(-6);
-}
+    if (session.history.length > 6) {
+      session.history = session.history.slice(-6);
+    }
 
     const message = await client.messages.create({
       model: "claude-haiku-4-5",
@@ -87,10 +85,7 @@ if (session.history.length > 6) {
           cache_control: {"type": "ephemeral"}
         }
       ],
-      sessions[sessionId].history.push({
-  role: "assistant",
-  content: response
-});
+      messages: session.history
     });
 
     const inputTokens = message.usage.input_tokens;
@@ -107,13 +102,13 @@ if (session.history.length > 6) {
       .trim();
 
     const isNepali = /[\u0900-\u097F]/.test(userMessage);
-    const disclaimer = isNepali 
+    const disclaimer = isNepali
       ? "*यो सामान्य कानुनी जानकारी मात्र हो। योग्य वकिलसँग परामर्श गर्नुहोस्।*"
       : "*General legal information only. Consult a qualified lawyer for your situation.*";
 
     const response = cleanText + "\n\n---\n" + disclaimer;
 
-    sessions[sessionId].history.push({
+    session.history.push({
       role: "assistant",
       content: response
     });
@@ -122,8 +117,8 @@ if (session.history.length > 6) {
 
   } catch (error) {
     console.error("Error:", error);
-    res.status(500).json({ 
-      response: "माफ गर्नुहोस्, अहिले सेवा उपलब्ध छैन। कृपया केही समयपछि पुनः प्रयास गर्नुहोस्।" 
+    res.status(500).json({
+      response: "माफ गर्नुहोस्, अहिले सेवा उपलब्ध छैन। कृपया केही समयपछि पुनः प्रयास गर्नुहोस्।"
     });
   }
 });
