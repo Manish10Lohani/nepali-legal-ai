@@ -8,11 +8,10 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
+    body {
       font-family: Arial, sans-serif;
       background: #f0f2f5;
       min-height: 100dvh;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -25,6 +24,8 @@ body {
         padding: 0;
         background: white;
         justify-content: flex-start;
+        min-height: 100svh;
+        height: 100svh;
       }
     }
 
@@ -32,21 +33,21 @@ body {
       width: 100%;
       max-width: 780px;
       height: 100dvh;
-      overflow: hidden;
+      max-height: 100dvh;
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
     }
 
     @media (max-width: 600px) {
       .container {
         border-radius: 0;
         box-shadow: none;
-        height: 100dvh;
         height: 100svh;
+        max-height: 100svh;
+        flex: 1;
       }
     }
 
@@ -57,6 +58,7 @@ body {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      flex-shrink: 0;
     }
 
     .header-title { text-align: center; flex: 1; }
@@ -89,10 +91,12 @@ body {
     .messages {
       flex: 1;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       padding: 20px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+      min-height: 0;
     }
 
     .message {
@@ -149,6 +153,8 @@ body {
       border-top: 1px solid #eee;
       display: flex;
       gap: 10px;
+      flex-shrink: 0;
+      background: white;
     }
 
     input {
@@ -202,7 +208,7 @@ body {
     </div>
 
     <!-- DISCLAIMER BANNER -->
-    <div style="background: #fff3cd; color: #856404; padding: 10px 20px; font-size: 12px; text-align: center;">
+    <div style="background: #fff3cd; color: #856404; padding: 10px 20px; font-size: 12px; text-align: center; flex-shrink: 0;">
       <span id="disclaimer-np">⚠️ यो सामान्य कानुनी जानकारी मात्र हो — पेशेवर कानुनी सल्लाह होइन। जटिल मुद्दाहरूमा योग्य वकिलसँग परामर्श गर्नुहोस्।</span>
       <span id="disclaimer-en" style="display:none;">⚠️ This is general legal information only — not professional legal advice. For complex matters, consult a qualified lawyer.</span>
     </div>
@@ -241,7 +247,7 @@ body {
     </div>
   </div>
 
-  <div style="text-align: center; padding: 12px; font-size: 12px; color: #888; background: #f0f2f5;">
+  <div style="text-align: center; padding: 12px; font-size: 12px; color: #888; background: #f0f2f5; flex-shrink: 0; width: 100%;">
     © 2026 Vivekai &nbsp;|&nbsp;
     <a href="https://www.freeprivacypolicy.com/live/8c8ccab4-8754-4be7-8db4-f81840ae7162" target="_blank" style="color: #003893; text-decoration: none;">Privacy Policy</a>
     &nbsp;|&nbsp;
@@ -380,7 +386,7 @@ body {
 
       const assistantDiv = document.createElement('div');
       assistantDiv.className = 'message assistant';
-      assistantDiv.innerHTML = DOMPurify.sanitize(formatted); // safe: AI response from our own backend, not user input
+      assistantDiv.innerHTML = DOMPurify.sanitize(formatted);
       messages.appendChild(assistantDiv);
 
       const actionsDiv = document.createElement('div');
