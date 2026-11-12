@@ -45,11 +45,19 @@ app.post("/chat", async (req, res) => {
       sessions.set(sessionId, { history: [] });
     }
 
-    const session = sessions.get(sessionId);
-    session.history.push({
-      role: "user",
-      content: userMessage
-    });
+const session = sessions.get(sessionId);
+
+// Detect language and inject explicit instruction
+const hasDevanagari = /[\u0900-\u097F]/.test(userMessage);
+const isRomanNepali = /\b(mero|tapai|kasari|garne|jagga|talab|gharelu|kanun|adalat|nyaya|paisa|sampatti|kaam|nokar|biha|talak|bachcha|mahila|purush|desh|sarkar)\b/i.test(userMessage);
+const languageInstruction = hasDevanagari || isRomanNepali
+  ? "[SYSTEM: User wrote in Nepali/Devanagari. Your ENTIRE response must be in Nepali Devanagari script only. Zero English words except proper nouns.]"
+  : "[SYSTEM: User wrote in English. Your ENTIRE response must be 100% in English. Zero Nepali or Hindi words.]";
+
+session.history.push({
+  role: "user",
+  content: languageInstruction + "\n\n" + userMessage
+});
 
     if (session.history.length > 6) {
       session.history = session.history.slice(-6);
