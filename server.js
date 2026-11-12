@@ -128,6 +128,7 @@ If a question asks for a specific legal fact, section number, penalty amount, or
     const inputTokens = message.usage.input_tokens;
     const outputTokens = message.usage.output_tokens;
     const estimatedCost = ((inputTokens * 0.00000025) + (outputTokens * 0.00000125)).toFixed(6);
+    console.log(`📩 User asked: ${userMessage}`);
     console.log(`💰 Tokens - Input: ${inputTokens}, Output: ${outputTokens}, Cost: $${estimatedCost}`);
 
     const cleanText = message.content[0].text
