@@ -49,10 +49,16 @@ const session = sessions.get(sessionId);
 
 // Detect language and inject explicit instruction
 const hasDevanagari = /[\u0900-\u097F]/.test(userMessage);
-const isRomanNepali = /\b(mero|tapai|kasari|garne|jagga|talab|gharelu|kanun|adalat|nyaya|paisa|sampatti|kaam|nokar|biha|talak|bachcha|mahila|purush|desh|sarkar)\b/i.test(userMessage);
-const languageInstruction = hasDevanagari || isRomanNepali
+
+// Detect if it looks like proper English sentences
+// Real English has common English function words
+const looksLikeEnglish = /\b(the|is|are|was|were|what|how|when|where|who|can|will|do|does|did|my|your|i|we|they|he|she|it|this|that|have|has|had|not|and|or|but|if|in|on|at|to|for|of|with|about|please|help|tell|me|want|need)\b/i.test(userMessage);
+
+const languageInstruction = hasDevanagari
   ? "[SYSTEM: User wrote in Nepali/Devanagari. Your ENTIRE response must be in Nepali Devanagari script only. Zero English words except proper nouns.]"
-  : "[SYSTEM: User wrote in English. Your ENTIRE response must be 100% in English. Zero Nepali or Hindi words.]";
+  : looksLikeEnglish
+    ? "[SYSTEM: User wrote in English. Your ENTIRE response must be 100% in English. Zero Nepali or Hindi words.]"
+    : "[SYSTEM: User wrote in Roman/transliterated Nepali. Your ENTIRE response must be in Nepali Devanagari script only. Zero English words except proper nouns.]";
 
 session.history.push({
   role: "user",
