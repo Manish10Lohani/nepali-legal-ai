@@ -137,7 +137,7 @@ If a question asks for a specific legal fact, section number, penalty amount, or
       .replace(/\n---\n/g, '')
       .trim();
 
-    const isNepali = /[\u0900-\u097F]/.test(userMessage);
+    const isNepali = /[\u0900-\u097F]/.test(userMessage) || !(/\b(the|is|are|was|were|what|how|when|where|who|can|will|do|does|did|my|your|i|we|they|he|she|it|this|that|have|has|had|not|and|or|but|if|in|on|at|to|for|of|with|about|please|help|tell|me|want|need)\b/i.test(userMessage));
     const disclaimer = isNepali
       ? "*यो सामान्य कानुनी जानकारी मात्र हो। योग्य वकिलसँग परामर्श गर्नुहोस्।*"
       : "*General legal information only. Consult a qualified lawyer for your situation.*";
