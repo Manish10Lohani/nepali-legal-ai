@@ -342,21 +342,25 @@ if (clearBtn) clearBtn.textContent = isEn ? ' New Chat' : ' नयाँ कु�
       sendMessage();
     }
 
-    async function sendFeedback(id, type, btn) {
-      const container = btn.parentElement;
-      while (container.firstChild) container.removeChild(container.firstChild);
-      const msg = document.createElement('span');
-      msg.style.cssText = 'font-size:13px;color:#666;padding:4px 10px;';
-      msg.textContent = type === 'up'
-        ? (currentLang === 'en' ? '✅ Thank you!' : '✅ धन्यवाद!')
-        : (currentLang === 'en' ? '🙏 Thank you! We will improve.' : '🙏 धन्यवाद! सुधार गर्नेछौं।');
-      container.appendChild(msg);
-      await fetch("/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, type })
-      });
-    }
+async function sendFeedback(id, type, btn) {
+  const container = btn.parentElement;
+  // Only remove the 👍 and 👎 buttons, keep copy and share
+  const allBtns = Array.from(container.querySelectorAll('button'));
+  allBtns.forEach(b => {
+    if (b.textContent === '👍' || b.textContent === '👎') b.remove();
+  });
+  const msg = document.createElement('span');
+  msg.style.cssText = 'font-size:13px;color:#666;padding:4px 10px;';
+  msg.textContent = type === 'up'
+    ? (currentLang === 'en' ? '✅ Thank you!' : '✅ धन्यवाद!')
+    : (currentLang === 'en' ? '🙏 Thank you! We will improve.' : '🙏 धन्यवाद! सुधार गर्नेछौं।');
+  container.insertBefore(msg, container.firstChild);
+  await fetch("/feedback", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, type })
+  });
+}
 
     async function sendMessage() {
       const input = document.getElementById("userInput");
