@@ -185,6 +185,20 @@
     }
 
     button:hover { background: #002570; }
+
+    .clear-chat-btn {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.7);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+.clear-chat-btn:hover { background: rgba(255,255,255,0.2); }
+
   </style>
 
   <!-- Google Analytics -->
@@ -202,7 +216,7 @@
 
     <!-- HEADER with language toggle -->
     <div class="header">
-      <div style="width:80px;"></div><!-- spacer to center title -->
+      <button class="clear-chat-btn" onclick="clearChat()" id="clear-btn">🗑️ नयाँ</button>
       <div class="header-title">
         <h1> Vivekai</h1>
         <p>Wisdom in Law — कानुनी प्रक्रिया सजिलो तरिकाले</p>
@@ -301,6 +315,10 @@
         ? 'Type your question here...'
         : 'आफ्नो प्रश्न यहाँ लेख्नुहोस्...';
       document.getElementById('send-btn').textContent = isEn ? 'Send' : 'पठाउनुहोस्';
+      
+      // Clear chat button
+const clearBtn = document.getElementById('clear-btn');
+if (clearBtn) clearBtn.textContent = isEn ? '🗑️ New' : '🗑️ नयाँ';
 
       // Typing indicator text (for next message)
       window._typingText = isEn
@@ -420,11 +438,42 @@
 
       actionsDiv.appendChild(upBtn);
       actionsDiv.appendChild(downBtn);
+      const copyBtn = document.createElement('button');
+copyBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
+copyBtn.textContent = '📋 Copy';
+copyBtn.onclick = function() {
+  const plainText = assistantDiv.innerText;
+  navigator.clipboard.writeText(plainText).then(() => {
+    copyBtn.textContent = '✅ Copied!';
+    setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
+  }).catch(() => {
+    const range = document.createRange();
+    range.selectNode(assistantDiv);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+  });
+};
+actionsDiv.appendChild(copyBtn);
+
       actionsDiv.appendChild(waLink);
       actionsDiv.appendChild(fbLink);
       messages.appendChild(actionsDiv);
       messages.scrollTop = messages.scrollHeight;
     }
+    function clearChat() {
+  const messages = document.getElementById('messages');
+  // Remove everything except welcome msg, suggestions, tagline
+  const toKeep = ['welcome-msg', 'suggestions', 'tagline'];
+  Array.from(messages.children).forEach(child => {
+    if (!toKeep.includes(child.id)) child.remove();
+  });
+  // Reset welcome message to current language
+  setLang(currentLang);
+  // Clear session so server starts fresh
+  sessionStorage.removeItem('vivekaiSession');
+  // Show suggestions again
+  document.getElementById('suggestions').style.display = 'flex';
+}
   </script>
 </body>
 </html>
