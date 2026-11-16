@@ -424,17 +424,24 @@ if (clearBtn) clearBtn.textContent = isEn ? '🗑️ New' : '🗑️ नया�
       downBtn.textContent = '👎';
       downBtn.onclick = function() { sendFeedback(feedbackId, 'down', this); };
 
-      const waLink = document.createElement('a');
-      waLink.href = 'https://wa.me/?text=' + shareText;
-      waLink.target = '_blank';
-      waLink.style.cssText = 'background:#25D366;color:white;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;text-decoration:none;';
-      waLink.textContent = '📱 WhatsApp';
+const shareBtn = document.createElement('button');
+shareBtn.style.cssText = 'background:#25D366;color:white;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;';
+shareBtn.textContent = '📤 Share';
+shareBtn.onclick = function() {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Vivekai — कानुनी सहायक',
+      text: decodeURIComponent(shareText)
+    });
+  } else {
+    window.open('https://wa.me/?text=' + shareText, '_blank');
+  }
+};
 
-      const fbLink = document.createElement('a');
-      fbLink.href = 'https://www.facebook.com/sharer/sharer.php?u=https://vivekai.live';
-      fbLink.target = '_blank';
-      fbLink.style.cssText = 'background:#1877F2;color:white;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;text-decoration:none;';
-      fbLink.textContent = '📘 Facebook';
+actionsDiv.appendChild(upBtn);
+actionsDiv.appendChild(downBtn);
+actionsDiv.appendChild(copyBtn);
+actionsDiv.appendChild(shareBtn);
 
       actionsDiv.appendChild(upBtn);
       actionsDiv.appendChild(downBtn);
