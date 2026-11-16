@@ -318,7 +318,7 @@
       
       // Clear chat button
 const clearBtn = document.getElementById('clear-btn');
-if (clearBtn) clearBtn.textContent = isEn ? '🗑️ New' : '🗑️ नयाँ';
+if (clearBtn) clearBtn.textContent = isEn ? ' New Chat' : ' नयाँ कुराकानी';
 
       // Typing indicator text (for next message)
       window._typingText = isEn
@@ -415,14 +415,30 @@ if (clearBtn) clearBtn.textContent = isEn ? '🗑️ New' : '🗑️ नया�
       actionsDiv.style.cssText = 'display:flex;gap:8px;padding:0 4px;margin-top:-8px;flex-wrap:wrap;';
 
       const upBtn = document.createElement('button');
-      upBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
-      upBtn.textContent = '👍';
-      upBtn.onclick = function() { sendFeedback(feedbackId, 'up', this); };
+upBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
+upBtn.textContent = '👍';
+upBtn.onclick = function() { sendFeedback(feedbackId, 'up', this); };
 
-      const downBtn = document.createElement('button');
-      downBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
-      downBtn.textContent = '👎';
-      downBtn.onclick = function() { sendFeedback(feedbackId, 'down', this); };
+const downBtn = document.createElement('button');
+downBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
+downBtn.textContent = '👎';
+downBtn.onclick = function() { sendFeedback(feedbackId, 'down', this); };
+
+const copyBtn = document.createElement('button');
+copyBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
+copyBtn.textContent = '📋 Copy';
+copyBtn.onclick = function() {
+  const plainText = assistantDiv.innerText;
+  navigator.clipboard.writeText(plainText).then(() => {
+    copyBtn.textContent = '✅ Copied!';
+    setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
+  }).catch(() => {
+    const range = document.createRange();
+    range.selectNode(assistantDiv);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+  });
+};
 
 const shareBtn = document.createElement('button');
 shareBtn.style.cssText = 'background:#25D366;color:white;border:none;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;';
@@ -442,30 +458,8 @@ actionsDiv.appendChild(upBtn);
 actionsDiv.appendChild(downBtn);
 actionsDiv.appendChild(copyBtn);
 actionsDiv.appendChild(shareBtn);
-
-      actionsDiv.appendChild(upBtn);
-      actionsDiv.appendChild(downBtn);
-      const copyBtn = document.createElement('button');
-copyBtn.style.cssText = 'background:none;border:1px solid #ddd;border-radius:12px;padding:4px 10px;cursor:pointer;font-size:13px;color:#666;';
-copyBtn.textContent = '📋 Copy';
-copyBtn.onclick = function() {
-  const plainText = assistantDiv.innerText;
-  navigator.clipboard.writeText(plainText).then(() => {
-    copyBtn.textContent = '✅ Copied!';
-    setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 2000);
-  }).catch(() => {
-    const range = document.createRange();
-    range.selectNode(assistantDiv);
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(range);
-  });
-};
-actionsDiv.appendChild(copyBtn);
-
-      actionsDiv.appendChild(waLink);
-      actionsDiv.appendChild(fbLink);
-      messages.appendChild(actionsDiv);
-      messages.scrollTop = messages.scrollHeight;
+messages.appendChild(actionsDiv);
+messages.scrollTop = messages.scrollHeight;
     }
     function clearChat() {
   const messages = document.getElementById('messages');
